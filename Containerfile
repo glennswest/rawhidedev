@@ -122,6 +122,57 @@ RUN dnf -y update && dnf -y install \
     texinfo \
     && dnf clean all
 
+# ── Block device, filesystem & formatting tools ──────────────────────────
+RUN dnf -y install \
+    # Partitioning
+    parted \
+    gdisk \
+    fdisk \
+    sfdisk \
+    util-linux \
+    # Filesystem creation / formatting
+    e2fsprogs \
+    xfsprogs \
+    btrfs-progs \
+    dosfstools \
+    ntfs-3g \
+    ntfsprogs \
+    f2fs-tools \
+    exfatprogs \
+    squashfs-tools \
+    erofs-utils \
+    jfsutils \
+    # Filesystem inspection / repair
+    xfsdump \
+    # LVM / device-mapper / RAID
+    lvm2 \
+    mdadm \
+    device-mapper-multipath \
+    dmraid \
+    cryptsetup \
+    # iSCSI / NVMe / SCSI
+    iscsi-initiator-utils \
+    nvme-cli \
+    sg3_utils \
+    lsscsi \
+    sdparm \
+    hdparm \
+    smartmontools \
+    # NBD / loop / sparse
+    nbd \
+    # Block tracing & benchmarking
+    blktrace \
+    fio \
+    ioping \
+    # Filesystem debugging
+    debugfs \
+    dump \
+    # General block utilities
+    lsblk \
+    blockdev \
+    losetup \
+    && dnf clean all
+
 # ── Rust development ─────────────────────────────────────────────────────
 # Install via rustup for latest toolchain + cross-compile targets
 ENV RUSTUP_HOME=/usr/local/rustup
