@@ -7,5 +7,6 @@
 - **feat:** Full kernel/driver development headers — PCI, USB, DRM/GPU, block/storage, network, RDMA, ALSA, I2C/SPI/GPIO, NUMA, ACPI, io_uring, device-mapper, netfilter
 - **feat:** Kernel tooling additions — coccinelle, trace-cmd, kernelshark, bcc-tools, cscope, ctags, kmod-devel, nvme-cli, ethtool
 - **feat:** Block device and filesystem tools — parted, gdisk, fdisk, lvm2, mdadm, cryptsetup, multipath, iSCSI, NVMe, SCSI, smartmontools, blktrace, fio, ioping, nbd
+- **feat:** ublk and io_uring tools — ubdsrv (ublk userspace block driver), liburing + liburing-devel
 - **feat:** Filesystem formatting — e2fsprogs, xfsprogs, btrfs-progs, dosfstools, ntfs-3g, f2fs-tools, exfatprogs, squashfs-tools, erofs-utils, jfsutils
 - **docs:** README with build/run instructions

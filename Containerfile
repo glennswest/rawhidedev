@@ -158,6 +158,11 @@ RUN dnf -y install \
     sdparm \
     hdparm \
     smartmontools \
+    # ublk (userspace block driver via io_uring)
+    ubdsrv \
+    # io_uring runtime + headers (devel also in kernel section)
+    liburing \
+    liburing-devel \
     # NBD / loop / sparse
     nbd \
     # Block tracing & benchmarking
