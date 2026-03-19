@@ -6,7 +6,9 @@ Fedora Rawhide development container with tooling for kernel, Rust, Go, and gene
 
 | Category | Tools |
 |----------|-------|
-| **Kernel dev** | kernel-devel, kernel-headers, elfutils, dwarves, sparse, bc, bison, flex, ncurses-devel, perf, strace, crash, bpftool, libbpf, dtc |
+| **Kernel dev** | kernel-devel, kernel-headers, kernel-modules, kernel-modules-extra, elfutils, dwarves, sparse, coccinelle, bc, bison, flex, ncurses-devel, kmod-devel, cscope, ctags |
+| **Driver headers** | pciutils-devel, libusb1-devel, libdrm-devel, libinput-devel, libevdev-devel, libudev-devel/systemd-devel, libpcap-devel, libaio-devel, liburing-devel, sg3_utils-devel, nvme-cli, libmnl-devel, libnl3-devel, rdma-core-devel, libibverbs-devel, numactl-devel, alsa-lib-devel, i2c-tools, acpica-tools |
+| **Kernel debug** | perf, strace, crash, systemtap, trace-cmd, kernelshark, bpftool, libbpf, bcc-tools |
 | **Rust** | rustup (stable), rust-analyzer, clippy, rustfmt, musl targets (x86_64 + aarch64), cargo-watch, cargo-expand, cargo-audit, cargo-fuzz, sccache |
 | **Go** | golang, gopls, delve, staticcheck, golangci-lint |
 | **C/C++** | gcc, g++, clang, llvm, lld, cmake, ninja, meson, autoconf, automake, ccache |

@@ -23,13 +23,19 @@ RUN dnf -y update && dnf -y install \
     libtool \
     pkgconf \
     ccache \
-    # Kernel development
+    # Kernel development — core
     kernel-devel \
     kernel-headers \
+    kernel-modules \
+    kernel-modules-extra \
+    glibc-devel \
+    glibc-headers-x86 \
     elfutils-libelf-devel \
+    elfutils-devel \
     openssl-devel \
     dwarves \
     sparse \
+    coccinelle \
     bc \
     bison \
     flex \
@@ -39,6 +45,55 @@ RUN dnf -y update && dnf -y install \
     python3 \
     python3-pip \
     python3-devel \
+    # Kernel source navigation
+    cscope \
+    ctags \
+    # Kernel module management
+    kmod \
+    kmod-devel \
+    # Device driver subsystem headers
+    pciutils \
+    pciutils-devel \
+    usbutils \
+    libusb1-devel \
+    libpcap-devel \
+    libdrm-devel \
+    mesa-libGL-devel \
+    mesa-libEGL-devel \
+    libinput-devel \
+    libevdev-devel \
+    libudev-devel \
+    systemd-devel \
+    # Block/storage driver headers
+    lvm2-devel \
+    device-mapper-devel \
+    libblkid-devel \
+    libaio-devel \
+    liburing-devel \
+    sg3_utils-devel \
+    nvme-cli \
+    # Network driver headers
+    libmnl-devel \
+    libnl3-devel \
+    libnfnetlink-devel \
+    libnetfilter_conntrack-devel \
+    ethtool \
+    iw \
+    wireless-regdb \
+    # RDMA / InfiniBand
+    rdma-core-devel \
+    libibverbs-devel \
+    # NUMA
+    numactl-devel \
+    # Sound/ALSA driver headers
+    alsa-lib-devel \
+    # Crypto
+    libgcrypt-devel \
+    nss-devel \
+    # Firmware / ACPI
+    acpica-tools \
+    # I2C / SPI / GPIO (embedded/driver dev)
+    i2c-tools \
     # Kernel debugging & tracing
     perf \
     strace \
@@ -46,9 +101,13 @@ RUN dnf -y update && dnf -y install \
     systemtap \
     systemtap-devel \
     crash \
+    trace-cmd \
+    kernelshark \
     # BPF/eBPF tooling
     bpftool \
     libbpf-devel \
+    bcc-devel \
+    bcc-tools \
     clang \
     llvm \
     lld \
