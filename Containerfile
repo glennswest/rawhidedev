@@ -29,7 +29,6 @@ RUN dnf -y update && dnf -y install \
     kernel-modules \
     kernel-modules-extra \
     glibc-devel \
-    glibc-headers-x86 \
     elfutils-libelf-devel \
     elfutils-devel \
     openssl-devel \
