@@ -123,19 +123,15 @@ RUN dnf -y update && dnf -y install \
 
 # ── Block device, filesystem & formatting tools ──────────────────────────
 RUN dnf -y install \
-    # Partitioning
+    # Partitioning (fdisk/sfdisk/lsblk/blockdev/losetup are in util-linux from step 6)
     parted \
     gdisk \
-    fdisk \
-    sfdisk \
-    util-linux \
     # Filesystem creation / formatting
     e2fsprogs \
     xfsprogs \
     btrfs-progs \
     dosfstools \
     ntfs-3g \
-    ntfsprogs \
     f2fs-tools \
     exfatprogs \
     squashfs-tools \
@@ -143,15 +139,12 @@ RUN dnf -y install \
     jfsutils \
     # Filesystem inspection / repair
     xfsdump \
-    # LVM / device-mapper / RAID
-    lvm2 \
+    # LVM / device-mapper / RAID (lvm2 installed in step 6)
     mdadm \
     device-mapper-multipath \
-    dmraid \
     cryptsetup \
-    # iSCSI / NVMe / SCSI
+    # iSCSI / NVMe / SCSI (nvme-cli installed in step 6)
     iscsi-initiator-utils \
-    nvme-cli \
     sg3_utils \
     lsscsi \
     sdparm \
@@ -159,22 +152,14 @@ RUN dnf -y install \
     smartmontools \
     # ublk (userspace block driver via io_uring)
     ubdsrv \
-    # io_uring runtime + headers (devel also in kernel section)
-    liburing \
-    liburing-devel \
-    # NBD / loop / sparse
+    # NBD
     nbd \
     # Block tracing & benchmarking
     blktrace \
     fio \
     ioping \
-    # Filesystem debugging
-    debugfs \
+    # Filesystem debugging (debugfs is in e2fsprogs)
     dump \
-    # General block utilities
-    lsblk \
-    blockdev \
-    losetup \
     && dnf clean all
 
 # ── Rust development ─────────────────────────────────────────────────────
