@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### 2026-03-22
+- **feat:** Explicit x86_64 (linux/amd64) platform targeting in build scripts
+
 ### 2026-03-21
 - **refactor:** Switch build scripts from podman to buildah for build-container compatibility
 - **feat:** Push repo to GitHub (glennswest/rawhidedev)
