@@ -4,6 +4,9 @@ set -euo pipefail
 REGISTRY="registry.gt.lo:5000"
 PLATFORM="linux/amd64"
 
+echo "=== Installing build tools ==="
+dnf install -y buildah
+
 echo "=== Building rawhidedev (Fedora Rawhide) [${PLATFORM}] ==="
 buildah build --platform "${PLATFORM}" -t rawhidedev -f Containerfile .
 
