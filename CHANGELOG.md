@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### 2026-03-21
+- **refactor:** Switch build scripts from podman to buildah for build-container compatibility
+- **feat:** Push repo to GitHub (glennswest/rawhidedev)
+
 ### 2026-03-19
 - **feat:** Initial Containerfile — Fedora Rawhide dev container with kernel, Rust, Go, and general dev tooling
 - **feat:** Full kernel/driver development headers — PCI, USB, DRM/GPU, block/storage, network, RDMA, ALSA, I2C/SPI/GPIO, NUMA, ACPI, io_uring, device-mapper, netfilter
