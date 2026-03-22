@@ -169,7 +169,8 @@ ENV CARGO_HOME=/usr/local/cargo
 ENV PATH="/usr/local/cargo/bin:${PATH}"
 ENV RUST_MIN_STACK=16777216
 
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | \
+RUN export RUST_MIN_STACK=16777216 && \
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | \
     sh -s -- -y --default-toolchain stable --profile default && \
     rustup component add rust-src rust-analyzer clippy rustfmt && \
     rustup target add x86_64-unknown-linux-musl aarch64-unknown-linux-musl && \
