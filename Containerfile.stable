@@ -169,14 +169,14 @@ ENV CARGO_HOME=/usr/local/cargo
 ENV PATH="/usr/local/cargo/bin:${PATH}"
 ENV RUST_MIN_STACK=16777216
 
-RUN export RUST_MIN_STACK=16777216 && \
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | \
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | \
     sh -s -- -y --default-toolchain stable --profile default && \
     rustup component add rust-src rust-analyzer clippy rustfmt && \
     rustup target add x86_64-unknown-linux-musl aarch64-unknown-linux-musl && \
-    # Install common cargo tools
-    cargo install cargo-watch cargo-expand cargo-audit cargo-fuzz sccache && \
-    rm -rf /usr/local/cargo/registry/cache
+    # Install cargo-binstall for pre-built binaries (avoids QEMU compilation issues)
+    curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash && \
+    cargo binstall -y cargo-watch cargo-expand cargo-audit cargo-fuzz sccache && \
+    rm -rf /usr/local/cargo/registry/cache /tmp/*
 
 # Musl cross-compile support
 RUN dnf -y install musl-gcc musl-libc-static && dnf clean all
