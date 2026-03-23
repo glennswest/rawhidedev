@@ -11,7 +11,7 @@ if ! command -v buildah &>/dev/null; then
 fi
 
 echo "=== Building fedoradev (Fedora Stable) [${PLATFORM}] ==="
-buildah build --platform "${PLATFORM}" -t fedoradev -f Containerfile.stable .
+buildah build --network host --platform "${PLATFORM}" -t fedoradev -f Containerfile.stable .
 
 echo "=== Tagging fedoradev ==="
 buildah tag fedoradev "${REGISTRY}/fedoradev:latest"

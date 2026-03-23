@@ -11,7 +11,7 @@ if ! command -v buildah &>/dev/null; then
 fi
 
 echo "=== Building rawhidedev (Fedora Rawhide) [${PLATFORM}] ==="
-buildah build --platform "${PLATFORM}" -t rawhidedev -f Containerfile .
+buildah build --network host --platform "${PLATFORM}" -t rawhidedev -f Containerfile .
 
 echo "=== Tagging rawhidedev ==="
 buildah tag rawhidedev "${REGISTRY}/rawhidedev:latest"
