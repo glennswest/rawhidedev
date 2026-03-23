@@ -4,6 +4,12 @@ set -euo pipefail
 REGISTRY="registry.gt.lo:5000"
 PLATFORM="linux/amd64"
 
+# Install buildah if not present (bootstrap from upstream Fedora image)
+if ! command -v buildah &>/dev/null; then
+    echo "=== Installing buildah ==="
+    dnf install -y buildah
+fi
+
 echo "=== Building fedoradev (Fedora Stable) [${PLATFORM}] ==="
 buildah build --platform "${PLATFORM}" -t fedoradev -f Containerfile.stable .
 

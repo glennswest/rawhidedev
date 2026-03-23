@@ -146,20 +146,20 @@ Submit two parallel build jobs to mkube's job scheduler. Each job clones the rep
 # Rawhide build
 curl -s -X POST 'http://192.168.200.2:8082/api/v1/namespaces/default/jobs' \
   -H 'Content-Type: application/json' --data-binary @- <<'EOF'
-{"apiVersion":"v1","kind":"Job","metadata":{"name":"build-rawhide","namespace":"default"},"spec":{"pool":"build","priority":10,"repo":"https://github.com/glennswest/rawhidedev","buildScript":"build-rawhide.sh","buildImage":"registry.gt.lo:5000/rawhidedev:latest","timeout":7200}}
+{"apiVersion":"v1","kind":"Job","metadata":{"name":"build-rawhide","namespace":"default"},"spec":{"pool":"build","priority":10,"repo":"https://github.com/glennswest/rawhidedev","buildScript":"build-rawhide.sh","buildImage":"registry.fedoraproject.org/fedora:rawhide","timeout":7200}}
 EOF
 
 # Stable build
 curl -s -X POST 'http://192.168.200.2:8082/api/v1/namespaces/default/jobs' \
   -H 'Content-Type: application/json' --data-binary @- <<'EOF'
-{"apiVersion":"v1","kind":"Job","metadata":{"name":"build-stable","namespace":"default"},"spec":{"pool":"build","priority":10,"repo":"https://github.com/glennswest/rawhidedev","buildScript":"build-stable.sh","buildImage":"registry.gt.lo:5000/fedoradev:latest","timeout":7200}}
+{"apiVersion":"v1","kind":"Job","metadata":{"name":"build-stable","namespace":"default"},"spec":{"pool":"build","priority":10,"repo":"https://github.com/glennswest/rawhidedev","buildScript":"build-stable.sh","buildImage":"registry.fedoraproject.org/fedora:latest","timeout":7200}}
 EOF
 ```
 
 | Job | Script | Build Image | Output |
 |-----|--------|-------------|--------|
-| `build-rawhide` | `build-rawhide.sh` | `rawhidedev:latest` | `registry.gt.lo:5000/rawhidedev:latest` |
-| `build-stable` | `build-stable.sh` | `fedoradev:latest` | `registry.gt.lo:5000/fedoradev:latest` |
+| `build-rawhide` | `build-rawhide.sh` | `fedora:rawhide` | `registry.gt.lo:5000/rawhidedev:latest` |
+| `build-stable` | `build-stable.sh` | `fedora:latest` | `registry.gt.lo:5000/fedoradev:latest` |
 
 **Monitor the builds:**
 
