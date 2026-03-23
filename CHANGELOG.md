@@ -3,6 +3,9 @@
 ## [Unreleased]
 
 ### 2026-03-22
+- **feat:** Per-image build scripts (`build-rawhide.sh`, `build-stable.sh`) for parallel mkube job submission
+- **docs:** CLAUDE.md with mkube job build workflow
+- **docs:** README updated with mkube parallel build instructions
 - **feat:** Explicit x86_64 (linux/amd64) platform targeting in build scripts
 - **fix:** Use cargo-binstall for pre-built Rust tool binaries (QEMU can't compile under emulation)
 

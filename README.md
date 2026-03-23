@@ -118,7 +118,7 @@ podman, buildah, skopeo, rpm-build, rpm-devel, rpmlint, fedpkg, mock
 
 b4 (kernel patch management), codespell
 
-## How it was built
+## Building
 
 ### Project structure
 
@@ -126,60 +126,89 @@ b4 (kernel patch management), codespell
 rawhidedev/
 ├── Containerfile          # Fedora Rawhide image
 ├── Containerfile.stable   # Fedora Stable image (identical tooling)
+├── build-rawhide.sh       # Build + push rawhidedev (mkube job script)
+├── build-stable.sh        # Build + push fedoradev (mkube job script)
+├── build.sh               # Build both images locally (buildah)
+├── build-and-push.sh      # Build + push both sequentially (buildah)
+├── push.sh                # Push pre-built images to registry
 ├── CHANGELOG.md
 ├── README.md
 └── .gitignore
 ```
 
-### Build process
+### Build via mkube jobs (recommended)
 
-Both images were built locally on macOS (ARM64) using `podman`, which cross-builds for linux/aarch64 via QEMU emulation.
+Submit two parallel build jobs to mkube's job scheduler. Each job clones the repo on a bare metal host, builds one container image using `buildah`, and pushes it to the registry.
 
-**Rawhide build:**
-
-```bash
-podman build -t rawhidedev -f Containerfile .
-```
-
-**Stable build:**
+**Submit both builds in parallel:**
 
 ```bash
-podman build -t fedoradev -f Containerfile.stable .
+# Rawhide build
+curl -s -X POST 'http://192.168.200.2:8082/api/v1/namespaces/default/jobs' \
+  -H 'Content-Type: application/json' --data-binary @- <<'EOF'
+{"apiVersion":"v1","kind":"Job","metadata":{"name":"build-rawhide","namespace":"default"},"spec":{"pool":"build","priority":10,"repo":"https://github.com/glennswest/rawhidedev","buildScript":"build-rawhide.sh","buildImage":"registry.gt.lo:5000/rawhidedev:latest","timeout":7200}}
+EOF
+
+# Stable build
+curl -s -X POST 'http://192.168.200.2:8082/api/v1/namespaces/default/jobs' \
+  -H 'Content-Type: application/json' --data-binary @- <<'EOF'
+{"apiVersion":"v1","kind":"Job","metadata":{"name":"build-stable","namespace":"default"},"spec":{"pool":"build","priority":10,"repo":"https://github.com/glennswest/rawhidedev","buildScript":"build-stable.sh","buildImage":"registry.gt.lo:5000/fedoradev:latest","timeout":7200}}
+EOF
 ```
 
-The Containerfile is structured as layered `RUN` steps to maximize build cache reuse:
+| Job | Script | Build Image | Output |
+|-----|--------|-------------|--------|
+| `build-rawhide` | `build-rawhide.sh` | `rawhidedev:latest` | `registry.gt.lo:5000/rawhidedev:latest` |
+| `build-stable` | `build-stable.sh` | `fedoradev:latest` | `registry.gt.lo:5000/fedoradev:latest` |
 
-1. **Step 6** — Core build tools, kernel development packages, all driver subsystem `-devel` headers, debugging/tracing tools, BPF tooling (~966 packages, ~3 GB)
-2. **Step 7** — Block device tools, filesystem formatters, storage utilities, ublk/io_uring
-3. **Steps 8-10** — Rust toolchain via rustup + cargo tools (compiled from source)
-4. **Step 11** — Musl cross-compile support
-5. **Steps 12-14** — Go toolchain + Go tools (installed via `go install`)
-6. **Steps 15-20** — Git/GitHub, networking, editors, containers/packaging, Python extras
-7. **Steps 21-22** — Workspace setup and git config defaults
-
-### Registry push
-
-Images were tagged and pushed to the local mkube registry:
+**Monitor the builds:**
 
 ```bash
-# Rawhide
-podman tag rawhidedev registry.gt.lo:5000/rawhidedev:latest
-podman push --tls-verify=false registry.gt.lo:5000/rawhidedev:latest
+# All jobs
+mk get jobs -n default
 
-# Stable
-podman tag fedoradev registry.gt.lo:5000/fedoradev:latest
-podman push --tls-verify=false registry.gt.lo:5000/fedoradev:latest
+# Individual job status
+curl -s 'http://192.168.200.2:8082/api/v1/namespaces/default/jobs/build-rawhide' | python3 -m json.tool
+curl -s 'http://192.168.200.2:8082/api/v1/namespaces/default/jobs/build-stable' | python3 -m json.tool
+
+# Logs
+curl -s 'http://192.168.200.2:8082/api/v1/namespaces/default/jobs/build-rawhide/logs'
+curl -s 'http://192.168.200.2:8082/api/v1/namespaces/default/jobs/build-stable/logs'
 ```
 
-`--tls-verify=false` is needed because the mkube registry at `192.168.200.3:5000` uses a self-signed CA.
+**Cleanup after completion:**
 
-### Build fixes applied during iteration
+```bash
+mk delete job build-rawhide -n default
+mk delete job build-stable -n default
+```
 
-- Removed `glibc-headers-x86` (not available in Rawhide — headers are included in `glibc-devel`)
-- Removed `dmraid` (not packaged in Rawhide)
-- Removed `ntfsprogs` (merged into `ntfs-3g`)
-- Deduplicated packages already installed in earlier layers (util-linux, lvm2, nvme-cli, liburing, liburing-devel)
-- Removed standalone `debugfs` (provided by e2fsprogs)
+### Build locally (alternative)
+
+If building on a local Linux host with `buildah` installed:
+
+```bash
+# Build both images
+./build.sh
+
+# Build + push to registry
+./build-and-push.sh
+
+# Push only (images must already be built)
+./push.sh
+```
+
+### Containerfile structure
+
+Layered `RUN` steps maximize build cache reuse:
+
+1. Core build tools, kernel development packages, driver subsystem `-devel` headers, debugging/tracing, BPF tooling
+2. Block device tools, filesystem formatters, storage utilities, ublk/io_uring
+3. Rust toolchain via rustup + cargo tools
+4. Musl cross-compile support
+5. Go toolchain + Go tools
+6. Git/GitHub, networking, editors, containers/packaging, Python extras
+7. Workspace setup and git config defaults
 
 ## Usage
 
